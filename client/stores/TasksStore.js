@@ -30,6 +30,19 @@ const TasksStore = Object.assign({}, EventEmitter.prototype, {
         return _tasks;
     },
 
+    getError() {
+        if (_loadingError)
+            return {
+                error_status: _loadingError.status,
+                error_text: _loadingError.data
+            }
+        else
+            return{
+                error_status: 0,
+                error_text: ''
+            }
+    },
+
     emitChange: function() {
         this.emit(CHANGE_EVENT);
     },
@@ -62,8 +75,8 @@ AppDispatcher.register(function(action) {
         }
 
         case AppConstants.LOAD_TASKS_FAIL: {
+            console.log(action.error)
             _loadingError = action.error;
-
             TasksStore.emitChange();
             break;
         }

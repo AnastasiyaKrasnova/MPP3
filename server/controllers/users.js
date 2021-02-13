@@ -5,7 +5,7 @@ const bcrypt=require('bcryptjs')
 const schema=Joi.object({
     first_name: Joi.string().max(25).required(),
     last_name: Joi.string().max(25).required(),
-    email: Joi.email().max(25).min(5).required(),
+    email: Joi.string().max(25).min(5).required(),
     password: Joi.string().max(100).min(5).required(),
 });
 
@@ -22,12 +22,12 @@ exports.register=async (data)=>{
     try{
         const isExists=await isUserExists(data.email);
         if (isExists)
-            return null;
+            return 1;
         const savedUser=await user.save();
         return savedUser;
 
     }catch(err){
-        return null;
+        return 0;
     }
 }
 

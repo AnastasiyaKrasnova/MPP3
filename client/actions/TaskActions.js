@@ -17,11 +17,13 @@ const TaskActions = {
                 tasks: data
             })
         )
-        .catch(err =>
+        .catch((err) =>{
             AppDispatcher.dispatch({
                 type: Constants.LOAD_TASKS_FAIL,
-                error: err
+                error: err.response
             })
+        }
+            
         );
     },
 
@@ -89,7 +91,7 @@ const TaskActions = {
         .catch(err =>
             AppDispatcher.dispatch({
                 type: Constants.LOAD_TASKS_FAIL,
-                error: err
+                error: err.response
             })
         );
     },
@@ -108,6 +110,29 @@ const TaskActions = {
         api.deleteFile(filename,id)
         .catch(err => {
            console.log(err);
+        });
+    },
+
+    login(user){
+        api.login(user)
+        .then(() =>
+        this.loadTasks()
+        )
+        .catch(err => {
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
+        });
+    },
+
+    register(user){
+        api.register(user)
+        .catch(err => {
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
         });
     }
 };

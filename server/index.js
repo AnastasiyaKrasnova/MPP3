@@ -5,6 +5,7 @@ const dotenv=require('dotenv');
 const mongoose=require('mongoose');
 const path = require('path');
 const fileUpload = require('express-fileupload');
+const cookies = require("cookie-parser");
 const {serverPort} =require('../api_config.json');
 
 global.appRoot = path.resolve(__dirname);
@@ -24,6 +25,7 @@ mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true },
 app.use(cors())
 app.use(express.json());
 app.use(fileUpload());
+app.use(cookies());
 
 app.use("/static", express.static("public/build"));
 app.get('/',(req, res) => {

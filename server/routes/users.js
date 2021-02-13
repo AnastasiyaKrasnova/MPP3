@@ -1,25 +1,29 @@
 const router=require('express').Router();
 const jwt=require('jsonwebtoken');
-const Task=require('../controllers/tasks');
+const User=require('../controllers/users');
 
 
 router.post('/register', async (req,res)=>{
      const saved=await User.register(req.body);
-     if (saved)
-          res.status(200).send({id:saved.id});
+     if (saved==0)
+          res.status(406).send('User data is not full');
+     else if (saved==1){
+          res.status(406).send('User already exists');
+     }
      else
-          res.status(400).send('user data is incorrect');
+          res.status(200).send({id:saved.id});
 });
 
 
 router.post('/login', async (req,res)=>{
+     console.log(req.body);
      const valid=await User.login(req.body);
      if (valid){
           const token=jwt.sign({_id: valid.id},process.env.TOKEN_SECRET)
-          res.header('auth-token',token).send(token);
+          res.cookie("auth-token", token,{httpOnly: true, maxAge: 110000}).send(token);
      }   
      else
-          res.status(400).send('Email or password is incorrect');
+          res.status(401).send('Email or password is incorrect');
 });
 
 

@@ -34,6 +34,14 @@ export default {
 
     deleteFile(filename,id){
         return axios.delete(`${apiPrefix}/tasks/files?filename=${filename}&id=${id}`);
+    },
+
+    login(user){
+        return axios.post(`${apiPrefix}/login`,user);
+    },
+
+    register(user){
+        return axios.post(`${apiPrefix}/register`,user);
     }
 
 }

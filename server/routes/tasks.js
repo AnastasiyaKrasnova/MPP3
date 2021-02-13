@@ -57,7 +57,7 @@ router.post('/tasks/download', async(req, res) => {
 });
 
 
-router.get('/tasks', auth,async (req,res)=>{
+router.get('/tasks', auth ,async (req,res)=>{
 
      if (!req.query.status){
           const saved=await Task.listAll();

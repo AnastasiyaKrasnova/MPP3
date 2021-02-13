@@ -5,8 +5,6 @@ import ColorPicker from './ColorPicker.jsx'
 import FileUpload from './FileUploader.jsx';
 import '../styles/TaskEditor.less'
 import moment from 'moment'
-import axios from 'axios'
-import {apiPrefix} from '../../api_config.json';
 
 const COLORS = [ '#FF8A80','#FFD180','#FFFF8D', '#CCFF90']
 let count=0;
@@ -72,7 +70,6 @@ class TaskEditor extends React.Component{
     };
 
     handleFileDeleteGlobal(filename,id) {
-        console.log("ooooooooooooooo")
         count=count-1;
         this.props.onFileDelete(filename,id)
         this.handleFileDelete(filename);
@@ -116,8 +113,6 @@ class TaskEditor extends React.Component{
     };
 
     componentDidUpdate(){
-            console.log("Hello")
-            console.log(this.state)
             if (this.props.renew){
                 this.props.renew=false;
                 if (this.props.task){
@@ -147,7 +142,6 @@ class TaskEditor extends React.Component{
 
     render(){
        let listItems,button,onDelete;
-       console.log(this.state)
         if (this.props.task){
             listItems = this.state.files_list.map((item,i)=> 
             {
@@ -177,7 +171,6 @@ class TaskEditor extends React.Component{
                     <button onClick={this.handleFileDelete.bind(null,item)}>Delete</button>
                     </div>)
             });
-           console.log("After list",this.state)
         }
         
         return (
