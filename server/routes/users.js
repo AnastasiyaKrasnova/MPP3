@@ -20,7 +20,7 @@ router.post('/login', async (req,res)=>{
      const valid=await User.login(req.body);
      if (valid){
           const token=jwt.sign({_id: valid.id},process.env.TOKEN_SECRET)
-          res.cookie("auth-token", token,{httpOnly: true, maxAge: 110000}).send(token);
+          res.cookie("auth-token", token,{httpOnly: true, maxAge: 11000}).send(token);
      }   
      else
           res.status(401).send('Email or password is incorrect');

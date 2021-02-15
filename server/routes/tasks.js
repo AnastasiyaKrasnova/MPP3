@@ -5,7 +5,7 @@ const path = require('path');
 const auth=require('../middleware/verifyToken')
 
 
-router.post('/tasks', async (req,res)=>{
+router.post('/tasks', auth, async (req,res)=>{
     const saved=await Task.add(req.body);
    if (saved)
         res.status(200).send(saved);
@@ -13,7 +13,7 @@ router.post('/tasks', async (req,res)=>{
         res.status(400).send('json data is incorrect');
 });
 
-router.post('/tasks/files', async (req,res)=>{
+router.post('/tasks/files', auth, async (req,res)=>{
      console.log(req.files)
      if (!req.files) {
           return res.status(500).send({ msg: "file is not found" })
@@ -32,7 +32,7 @@ router.post('/tasks/files', async (req,res)=>{
       });
 });
 
-router.delete('/tasks/files', async (req,res)=>{
+router.delete('/tasks/files',auth, async (req,res)=>{
      const dir=`${global.appRoot}/public/${req.query.id}`
      let filePath = path.resolve(`${dir}/${req.query.filename}`);
      fs.unlinkSync(filePath, (err) => {
@@ -44,7 +44,7 @@ router.delete('/tasks/files', async (req,res)=>{
      res.status(200).send('deleted');
 });
 
-router.post('/tasks/download', async(req, res) => {
+router.post('/tasks/download',auth, async(req, res) => {
 
      const dir=`${global.appRoot}/public/${req.query.id}`
      let filePath = path.resolve(`${dir}/${req.query.filename}`);
@@ -76,7 +76,7 @@ router.get('/tasks', auth ,async (req,res)=>{
      
  });
 
-router.put('/tasks', async (req,res)=>{
+router.put('/tasks', auth, async (req,res)=>{
 
      console.log(req.body)
      const saved=await Task.update(req.body);
@@ -87,7 +87,7 @@ router.put('/tasks', async (req,res)=>{
          res.status(400).send('DB error while updating date');
  });
 
-router.delete('/tasks', async (req,res)=>{
+router.delete('/tasks', auth, async (req,res)=>{
 
      const dir=`${global.appRoot}/public/${req.query.id}`
      fs.rmdir(dir, { recursive: true }, (err) => {

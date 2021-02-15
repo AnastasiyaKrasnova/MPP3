@@ -41,7 +41,11 @@ const TaskActions = {
             );
             })     
             
-        }).catch(err => console.log(err))
+        }).catch(err =>  
+            AppDispatcher.dispatch({
+            type: Constants.LOAD_TASKS_FAIL,
+            error: err.response
+        }))
 
     },
 
@@ -51,7 +55,10 @@ const TaskActions = {
             this.loadTasks()
         )
         .catch(err =>
-            console.error(err)
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
         );
     },
 
@@ -62,7 +69,10 @@ const TaskActions = {
             console.log(note)
             api.uploadFile(formData,note.id)
             .catch(err =>
-                console.error(err)
+                AppDispatcher.dispatch({
+                    type: Constants.LOAD_TASKS_FAIL,
+                    error: err.response
+                })
             );
         })     
         api.updateTask(note)
@@ -70,7 +80,10 @@ const TaskActions = {
             this.loadTasks()
         )
         .catch(err =>
-            console.error(err)
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
         );
 
     },
@@ -102,14 +115,20 @@ const TaskActions = {
             download(res.data, filename);
         })
         .catch(err => {
-           console.log(err);
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
         });
     },
 
     deleteFile(filename,id){
         api.deleteFile(filename,id)
         .catch(err => {
-           console.log(err);
+            AppDispatcher.dispatch({
+                type: Constants.LOAD_TASKS_FAIL,
+                error: err.response
+            })
         });
     },
 
@@ -128,6 +147,9 @@ const TaskActions = {
 
     register(user){
         api.register(user)
+        .then(() =>
+        this.loadTasks()
+        )
         .catch(err => {
             AppDispatcher.dispatch({
                 type: Constants.LOAD_TASKS_FAIL,

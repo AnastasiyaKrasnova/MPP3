@@ -4,7 +4,6 @@ import TaskEditor from './TaskEditor.jsx'
 import TaskGrid from './TaskGrid.jsx'
 import TaskFilter from './TaskFilter.jsx'
 import LoginDialog from './LoginDialog.jsx'
-import RegisterDialog from './RegisterDialog.jsx'
 import TasksStore from '../stores/TasksStore.js'
 import TaskActions from '../actions/TaskActions';
 
@@ -22,8 +21,6 @@ function getStateFromFlux() {
     };
 }
 
-const MODE=Object.freeze({REGISTER:2, LOGIN:1, ELSE:0})
-
 class App extends React.Component{
 
     constructor (props){
@@ -33,8 +30,7 @@ class App extends React.Component{
         this.state={
             editTask: null,
             tasks:info.tasks,
-            error:info.error,
-            mode: MODE.ELSE
+            error:info.error
         }
         this.props.isEditing=false;
         this._onChange=this._onChange.bind(this);
@@ -43,7 +39,7 @@ class App extends React.Component{
         this.handleNoteDelete=this.handleNoteDelete.bind(this);
         this.handleLogIn=this.handleLogIn.bind(this);
         this.handleRegister=this.handleRegister.bind(this);
-        this.handleRegisterSwitch=this.handleRegisterSwitch.bind(this);
+        this.setModalOpens=this.setModalOpens.bind(this);
     }
 
     componentWillMount() {
@@ -96,34 +92,38 @@ class App extends React.Component{
    }
 
    handleLogIn(user){
-       TaskActions.login(user)
-       this.setState({mode: MODE.LOGIN})
-   }
+       this.props.isEditing=false;
+        TaskActions.login(user);
+    }
 
    handleRegister(user){
-        TaskActions.register(user)
-        this.setState({mode: MODE.REGISTER})
-
+        TaskActions.register(user);
    }
 
-   handleRegisterSwitch(){
-    this.setState({mode: MODE.LOGIN})
-
-}
-
-    render(){
-        /*let editor,open=false, register=false;
-        if ((this.state.error.status==401)){
-            open=true
+   setModalOpens(){
+       let login, register
+        if (this.state.error.status==401){
+            login=true
         }
-        else if ((this.state.error.status==406) && MODE.LOGIN){
+        else if (this.state.error.status==406){
+            login=true
             register=true
         }
+        else if (this.state.error.status==0){
+            login=false
+            register=false
+        }
+        return {login,register}
+   }
 
-        else if (this.state.error==0 && mode.REGISTER){
-            open=true
-        } */
 
+    render(){
+        let editor
+        let error=this.state.error
+
+        let res=this.setModalOpens()
+        let open_login=res.login
+        let open_register=res.register
 
         if (!this.props.isEditing) {
             editor= <TaskEditor renew={true} onNoteAdd={this.handleNoteAdd} />;
@@ -136,8 +136,7 @@ class App extends React.Component{
                 {editor}
                 <TaskFilter onFiltering={this.handleFiltering} onReturn={this.handleReturning}/>
                 <TaskGrid tasks={this.state.tasks} onNoteDelete={this.handleNoteDelete} onNoteEdit={this.handleNoteEdit} />
-                <LoginDialog error={this.state.error} open={open} onLogIn={this.handleLogIn} onRegister={this.handleRegisterSwitch} />
-                <RegisterDialog error={this.state.error} open={register} onRegister={this.handleRegister} />
+                <LoginDialog open_login={open_login} open_register={open_register} error={error} LogIn={this.handleLogIn} onRegister={this.handleRegister}/>
 
             </div>
         )

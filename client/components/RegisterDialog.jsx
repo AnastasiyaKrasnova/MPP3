@@ -12,7 +12,6 @@ class RegisterDialog extends React.Component{
     constructor (props){
         super(props);
         this.state={
-           isOpen:false,
            email:'',
            password:'',
            first_name: '',
@@ -42,21 +41,22 @@ class RegisterDialog extends React.Component{
         this.setState({ email: event.target.value });
     };
 
+    handleBack() {
+        this.props.onBack();
+        this.setState({email:'',password:'',email:'',password:''})
+    };
+
     handleRegister() {
+        //this.props.open=false
         const newUser = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             email: this.state.email,
             password: this.state.password
         };
-        this.props.onRegister(newUser);
+        this.props.onRegister(newUser)
         this.setState({email:'',password:'',first_name:'',last_name:''})
     };
-
-    handleBack(){
-        this.props.open=false
-        this.setState({email:'',password:'',first_name:'',last_name:''})
-    }
 
 
     render(){
@@ -78,7 +78,6 @@ class RegisterDialog extends React.Component{
                                 fullWidth
                             />
                             <TextField
-                                autoFocus
                                 label="Email Address"
                                 value={this.state.email}
                                 onChange={this.handleEmailChange}
